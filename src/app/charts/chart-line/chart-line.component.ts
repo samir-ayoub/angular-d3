@@ -71,7 +71,5 @@ export class ChartLineComponent implements AfterContentInit {
                             return 'normal'
                           }
                         })
-
-
   }
 }
