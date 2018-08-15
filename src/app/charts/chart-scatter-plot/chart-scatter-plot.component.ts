@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 export class ChartScatterPlotComponent implements AfterContentInit {
 
   h:number = 400;
-  w:number = 700;
+  w:number = 900;
   labels;
   svg;
   dots;
@@ -47,8 +47,8 @@ export class ChartScatterPlotComponent implements AfterContentInit {
                           .data(this.monthSales)
                           .enter()
                           .append('text')
-                          .text(d => d.sales)
-                          .attr('x', d => d.month * 3 - 30)
+                          .text(d => this.showMinMax(this.monthSales, 'sales', d.sales, 'minmax'))
+                          .attr('x', d => d.month * 3 - 25)
                           .attr('y', d => this.h - d.sales)
                           .attr('font-family', 'sans-serif')
                           .attr('fill', '#666666')
@@ -67,6 +67,20 @@ export class ChartScatterPlotComponent implements AfterContentInit {
 
   salesKPI(d) {
     return d >= 250 ? '#33cc66' : '#666666';
+  }
+
+  showMinMax(ds, col, val, type) {
+    const max = d3.max(ds, (d) => d[col]);
+    const min = d3.min(ds, (d) => d[col]);
+
+    if (type === 'minmax' && (val === max || val === min)) {
+      return val;
+    } else {
+      if (type === 'all') {
+        return val;
+      }
+    }
+
   }
 
 }
