@@ -11,6 +11,7 @@ export class ChartLineComponent implements AfterContentInit {
 
   h:number = 400;
   w:number = 700;
+  totalValue = 0;
 
   monthSales = [
     {'month': 10, 'sales': 100},
@@ -38,7 +39,7 @@ export class ChartLineComponent implements AfterContentInit {
   this.lineFun = d3.line()
       .x((d:any) => d.month * 3)
       .y((d:any) => this.h - d.sales)
-      .curve(d3.curveLinear)
+      .curve(d3.curveLinear);
   
 
   this.svg = d3.select('body')
@@ -57,19 +58,36 @@ export class ChartLineComponent implements AfterContentInit {
                         .enter()
                         .append('text')
                         .text(d => d.sales)
-                        .attr('x',d => d.month * 3 - 25)
+                        .attr('x', d => d.month * 3 - 25)
                         .attr('y', d => this.h - d.sales)
                         .attr('font-family', 'sans-serif')
                         .attr('fill', '#666666')
                         .attr('text-anchor', 'start')
                         .attr('dy', '.35em')
                         .attr('font-size', 14)
-                        .attr('font-weight', (d,i) => {
-                          if (i === 0 || i ==(this.monthSales.length-1)) {
-                            return 'bold'
+                        .attr('font-weight', (d, i) => {
+                          if (i === 0 || i === ( this.monthSales.length - 1 )) {
+                            return 'bold';
                           } else {
-                            return 'normal'
+                            return 'normal';
                           }
-                        })
+                        });
+
+  this.showTotals();
+  }
+
+  showTotals() {
+    const t = d3.select('body').append('table');
+
+    this.monthSales.map(d =>  {
+      this.totalValue = this.totalValue + d.sales;
+    });
+
+    const tr = t.selectAll('tr')
+              .data([1])
+              .enter()
+              .append('tr')
+              .append('td')
+              .text('Sales Total:' + this.totalValue);
   }
 }
